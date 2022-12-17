@@ -13,15 +13,14 @@ dbConnection();
 // Cors
 app.use( cors() );
 
+// Lectura y parseo del Body
+app.use( express.json() );
+
 // Rutas
-app.get( '/', ( req, res ) => {
+app.use( '/api/usuarios', require( './routes/usuarios' ) );
+app.use( '/api/auth', require( './routes/auth' ) );
 
-    res.json({
-        ok: true,
-        msg: 'desde /'
-    });
 
-});
 
 app.listen( process.env.PORT , ( req, rep ) => {
     console.log(`Servidor corriendo el puerto ${ process.env.PORT }`);
