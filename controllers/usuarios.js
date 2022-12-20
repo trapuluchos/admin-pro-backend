@@ -8,12 +8,26 @@ const Usuario = require("../models/usuario");
 
 const getUsuarios = async ( req, res ) => {
 
+    const limit = Number( req.query.limit );
+    const offset = Number( req.query.offset ) || 0;
+
     try {
-        const usuarios = await Usuario.find({}, 'nombre email role google');
-    
+
+        let usuariosDB;
+
+        if ( offset !== 0 ) {
+            usuariosDB = Usuario.find({}, 'nombre email role google img')
+                                    .skip( offset ).limit( limit );
+        } else {
+            usuariosDB = Usuario.find({}, 'nombre email role google img');
+        }
+
+        const [ usuarios,  total ] = await Promise.all( [ usuariosDB, Usuario.count() ]);
+
         res.json({
             ok: true,
-            usuarios
+            usuarios,
+            total
         });
         
     } catch (error) {
